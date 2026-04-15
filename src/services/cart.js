@@ -14,14 +14,52 @@ async function addItem(userCart, item) {
 
 // remover um produto do carrinho
 
-async function removeItem(userCart, name) {
+async function removeItem(userCart, index) {
+    // const deletedItem = index - 1; // Ajusta o índice para corresponder à posição correta no array (índice começa em 0)
+    // console.log('Índice a ser removido:', deletedItem); // Adicione esta linha para verificar o índice a ser removido
+    // // a função deve remover a quantidade do item no índice, se tem 2, ele diminui para 1, se tem 1, ele remove o item do carrinho
+    // if (deletedItem >= 0 && deletedItem < userCart.length) {
+    //     userCart.splice(deletedItem, 1); // O método splice é usado para remover o item do carrinho.
+    //     //  Ele recebe dois argumentos: o índice do elemento a ser removido e o número de elementos a
+    //     //  serem removidos (neste caso, 1).
+    //     console.log(`Item no índice ${index} removido do carrinho.`);
+    // }
 
+    const indexFFound = userCart.findIndex((i) => i.name === index.name);
+
+    if (indexFFound == -1) {
+        console.log(`Item "${index.name}" não encontrado no carrinho.`);
+        return
+    }
+
+    if (userCart[indexFFound].quantity > 1) {
+        userCart[indexFFound].quantity -= 1;
+        console.log(`Quantidade do item "${index.name}" reduzida para ${userCart[indexFFound].quantity}.`);
+
+    }else {
+        deleteCart(userCart, index.name);
+        console.log(`Item "${index.name}" removido do carrinho.`);
+    }
 }
 
 // deletando o carrinho inteiro
 
-async function deleteCart(userCart, index) {
-
+async function deleteCart(userCart, name) {
+    //explique a função deleteCart: A função deleteCart recebe o carrinho do usuário e um índice,
+    //  e remove o item no índice especificado usando o método splice. O método splice é uma função de array
+    //  que altera o conteúdo de um array, removendo ou substituindo elementos existentes e/ou adicionando
+    //  novos elementos. o splice recebe dois argumentos: o índice do elemento a ser removido
+    //  e o número de elementos a serem removidos. o findIndex é usado para encontrar o índice do item
+    //  no carrinho com base no nome do item. ele retorna o número -1 se o item não for encontrado, 
+    // ou o índice do item se ele for encontrado.
+    const index = userCart.findIndex((item) => item.name === name);
+    console.log('Index encontrado:', index); // Adicione esta linha para verificar o índice encontrado
+    if (index !== -1) {
+        userCart.splice(index, 1);
+        console.log(`Item "${name}" removido do carrinho.`);
+    } else {
+        console.log(`Item "${name}" não encontrado no carrinho.`);
+    }
 }
 
 // total do carrinho
@@ -40,5 +78,15 @@ async function totalCart(userCart) {
     // antes de processar os itens do carrinho.
 }
 
+//função para exibir o carrinho com detalhes, não em formato de array, mas sim listando os itens e seus detalhes
+async function showCart(userCart) {
+    console.log('Carrinho:');
+    userCart.forEach((item, index) => {
+        console.log(`${index + 1}. ${item.name} - R$ ${item.price.toFixed(2)} |
+         ${item.quantity} | Subtotal: R$ ${item.subTotal().toFixed(2)}`);
+    });
+}
+
+
 // exportar as funções
-export { addItem, removeItem, deleteCart, totalCart };
+export { addItem, removeItem, deleteCart, totalCart, showCart };
